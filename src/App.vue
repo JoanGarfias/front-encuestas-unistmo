@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+
 </script>
 
 <template>
@@ -9,6 +11,16 @@ import { Button } from '@/components/ui/button'
     documentation
   </p>
   <Button>Pepesech</Button>
+
+  <Accordion type="single" collapsible>
+    <AccordionItem value="item-1">
+      <AccordionTrigger>Is it accessible?</AccordionTrigger>
+      <AccordionContent>
+        Yes. It adheres to the WAI-ARIA design pattern.
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
+
 </template>
 
 <style scoped></style>
