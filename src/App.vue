@@ -1,7 +1,10 @@
 <script setup lang="ts"></script>
 
 <template>
-  <router-view />
+  <div class="min-h-screen bg-background">
+    <!-- ToDo: Header -->
+    <main class="mx-auto px-4 pt-24 pb-16">
+      <router-view />
+    </main>
+  </div>
 </template>
-
-<style scoped></style>
