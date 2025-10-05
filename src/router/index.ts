@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from "vue-router"
 
 // Aqui importen sus componentes
 import HomeView from "@/components/home/HomeView.vue"
-// import Example2 from "../components/example2.vue"
 import FormView from "@/components/form/FormView.vue"
+import StatsView from "@/components/stats/StatsView.vue"
 
 const routes = [
   {
@@ -16,7 +16,7 @@ const routes = [
   },
   {
     path: "/estadisticas",
-    // component: Example3,
+    component: StatsView,
   },
 ] as any
 
