@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router"
 
 // Aqui importen sus componentes
-// import Example from "../components/example.vue"
-// import Example2 from "../components/example2.vue"
+import HomeView from "@/components/home/HomeView.vue"
 import FormView from "@/components/form/FormView.vue"
+import StatsView from "@/components/stats/StatsView.vue"
 
 const routes = [
   {
     path: "/",
-    // component: Example,
+    component: HomeView,
   },
   {
     path: "/formulario",
@@ -16,7 +16,7 @@ const routes = [
   },
   {
     path: "/estadisticas",
-    // component: Example3,
+    component: StatsView,
   },
 ] as any
 

@@ -1,0 +1,28 @@
+name: Despliegue Frontend Producción - Encuestas Unistmo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Despliegue Frontend Producción - Encuestas Unistmo
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1- Checkout del repositorio
+        uses: actions/checkout@v3
+
+      - name: 2- Deploy via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SV_IP }}
+          username: ${{ secrets.SV_USER }}
+          password: ${{ secrets.SV_PASSWORD }}
+          script: |
+            export PATH=$PATH:/root/.nvm/versions/node/v24.6.0/bin
+            cd /var/www/encuestas/front-encuestas-unistmo
+            git checkout main
+            git pull origin main
+            npm install
+            npm run build
