@@ -192,7 +192,11 @@
     </CardContent>
 
     <CardFooter class="flex justify-end gap-3 pt-4 pb-0">
-      <Button class="w-full md:w-auto">Enviar</Button>
+      <Button
+      class="w-full md:w-auto"
+      @click="sendForm">
+          Enviar
+      </Button>
     </CardFooter>
   </Card>
 </template>
@@ -220,6 +224,19 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+
+import { useCheckAnswerStore } from "@/stores/checkAnsStore";
+const { checkAnswer } = useCheckAnswerStore();
+
+const sendForm = () => {
+  console.log("Formulario enviado");
+  /*Mandar al back-end los datos recopilados
+  si sale bien entonces hacer checkAnswer
+  usar componentes toast para mostrar mensajes
+  */
+
+  checkAnswer();
+}
 
 // Datos
 const sexos = [
