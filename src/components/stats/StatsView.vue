@@ -1,11 +1,11 @@
 <script setup lang="js">
 import BarChart from "./charts/BarChart.vue"
 import PieChart from "./charts/PieChart.vue"
-
+import PasswordModal from "../form/PasswordModal.vue"
 
 import { useCheckAnswerStore } from "@/stores/checkAnsStore"
 
-const { isAnswered } = useCheckAnswerStore()
+const store = useCheckAnswerStore()
 
 const defaultColors = [
   "#FF6384",
@@ -66,7 +66,7 @@ const PieChartOptions = {
 <template>
 
   <!--MODAL DE CONTRASEÑA-->
-  <PasswordModal v-if="!isAnswered"/>
+  <PasswordModal v-if="!store.isAnswered"/>
 
   <!-- VISTA DE ESTADÍSTICAS-->
   <div

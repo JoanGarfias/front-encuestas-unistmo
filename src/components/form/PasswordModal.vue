@@ -66,13 +66,7 @@
 </script>
 
 <template>
-    <Dialog :defaultOpen="true">
-        <DialogTrigger>
-            <Button variant="outline" class="cursor-pointer">
-                <ChartNoAxesColumn /> Ingresar contraseña
-            </Button>
-        </DialogTrigger>
-
+    <Dialog :open="true">
         <DialogContent class="w-sm">
             <DialogHeader>
                 <DialogTitle>Ingresa la contraseña</DialogTitle>
