@@ -112,7 +112,7 @@
             <Input
               id="tiempo"
               type="number"
-              placeholder="Tiempo de traslado"
+              placeholder="En minutos"
               class="w-full"
             />
           </div>
@@ -250,4 +250,85 @@ const semestres = [
   { value: "7", label: "7°" },
   { value: "9", label: "9°" },
 ]
+
+import { onMounted } from "vue";
+
+onMounted(() => {
+  const form    = document.querySelector("form") as HTMLFormElement | null;
+  const email   = document.getElementById("email")   as HTMLInputElement | null;
+  const name    = document.getElementById("name")    as HTMLInputElement | null;
+  const age     = document.getElementById("age")     as HTMLInputElement | null;
+  const tiempo  = document.getElementById("tiempo")  as HTMLInputElement | null;
+  const altura  = document.getElementById("altura")  as HTMLInputElement | null;
+
+  const blockNonInteger = (ev: KeyboardEvent) => {
+    if (["e","E","+","-",".",","].includes(ev.key)) ev.preventDefault();
+  };
+
+  const validateEmail = () => {
+    if (!email) return true;
+    email.setCustomValidity("");
+    const v = email.value.trim();
+    const ok =
+      v &&
+      !v.includes(",") &&
+      !/\s/.test(v) &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    if (!v) email.setCustomValidity("El correo es obligatorio.");
+    else if (!ok) email.setCustomValidity("Ingresa un correo válido (solo uno).");
+    return email.reportValidity();
+  };
+
+  const validateName = () => {
+    if (!name) return true;
+    name.setCustomValidity("");
+    name.value = name.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, "");
+    if (!name.value.trim()) name.setCustomValidity("El nombre es obligatorio.");
+    return name.reportValidity();
+  };
+
+  const validateAge = () => {
+    if (!age) return true;
+    age.setAttribute("min","1");
+    age.setCustomValidity("");
+    if (!age.value) age.setCustomValidity("La edad es obligatoria.");
+    else if (!(Number(age.value) > 0)) age.setCustomValidity("La edad debe ser mayor que 0.");
+    return age.reportValidity();
+  };
+
+  const validateEntero = (el: HTMLInputElement | null, label: string) => {
+    if (!el) return true;
+    el.setCustomValidity("");
+    if (el.value === "") el.setCustomValidity(`El campo ${label.toLowerCase()} es obligatorio.`);
+    else if (el.value.includes(".") || el.value.includes(",")) {
+      el.setCustomValidity(`${label} debe ser un número entero.`);
+    } else {
+      const n = Number(el.value);
+      if (!Number.isInteger(n) || n < 0) el.setCustomValidity(`${label} debe ser un entero y no negativo.`);
+    }
+    return el.reportValidity();
+  };
+
+  email?.addEventListener("input", validateEmail);
+  name?.addEventListener("input",  validateName);
+
+  age?.addEventListener("keydown",    blockNonInteger);
+  tiempo?.addEventListener("keydown", blockNonInteger);
+  altura?.addEventListener("keydown", blockNonInteger);
+
+  tiempo?.addEventListener("input", () => validateEntero(tiempo, "Tiempo"));
+  altura?.addEventListener("input", () => validateEntero(altura, "Altura"));
+
+  form?.addEventListener("submit", (e) => {
+    const ok =
+      validateEmail() &&
+      validateName() &&
+      validateAge() &&
+      validateEntero(altura, "Altura") &&
+      validateEntero(tiempo, "Tiempo");
+    if (!ok) e.preventDefault(); 
+  });
+});
+
+
 </script>
