@@ -1,12 +1,6 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
-    import { useRouter } from 'vue-router';
-
-    //COMPONENTS
-    import Navbar from '../Navbar.vue';
-    import Content from './Content.vue';
-
     //ICONS
+    import { ref } from 'vue';
     import { ChartNoAxesColumn } from 'lucide-vue-next';
 
     //UI
@@ -27,14 +21,17 @@
     } from "@/components/ui/pin-input"
 
     // METHODS
+    import { useCheckAnswerStore } from "@/stores/checkAnsStore"
+
+    const { checkAnswer } = useCheckAnswerStore()
+
     const value = ref<string[]>([]);
     const error = ref("");
     const loading = ref(false);
-    const router = useRouter();
 
     const API_URL = window.location.hostname === "localhost"
     ? "http://localhost:5000"
-    : "https://encuesta.dxicode.com"; 
+    : "https://encuesta.dxicode.com";
 
     const validatePassword = async () => {
         const pin = value.value.join("");
@@ -53,8 +50,9 @@
 
             if (data.code === 200) {
                 error.value = "";
-                router.push("/estadisticas");
                 value.value = [];
+                console.log("Login exitoso");
+                checkAnswer();
             } else {
                 error.value = "Contraseña inválida";
             }
@@ -68,10 +66,10 @@
 </script>
 
 <template>
-    <Dialog>
+    <Dialog :defaultOpen="true">
         <DialogTrigger>
             <Button variant="outline" class="cursor-pointer">
-                <ChartNoAxesColumn /> Ver Resultados
+                <ChartNoAxesColumn /> Ingresar contraseña
             </Button>
         </DialogTrigger>
 

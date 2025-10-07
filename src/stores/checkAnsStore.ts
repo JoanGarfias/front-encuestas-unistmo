@@ -12,11 +12,10 @@ export const useCheckAnswerStore = defineStore('counter', () => {
 
   const checkIsAnswered = computed(() => {
     const valueAnswered = JSON.parse(localStorage.getItem('isAnswered') || 'false');
-
+    isAnswered.value = valueAnswered;
     //Mensajes de depuración
     console.log('Comprobando respuesta');
     console.log(valueAnswered);
-
     return valueAnswered;
   })
 
