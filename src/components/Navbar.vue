@@ -75,8 +75,8 @@
                 <!-- Mobile Menu Button & Dropdown -->
                 <div class="md:hidden relative" ref="menuRef">
                     <button @click.stop="toggleMenu" class="p-2">
-                        <Menu v-if="!isMenuOpen" class="w-6 h-6" />
-                        <X v-else class="w-6 h-6" />
+                        <Menu v-if="!isMenuOpen" class="w-6 h-6 cursor-pointer" />
+                        <X v-else class="w-6 h-6 cursor-pointer" />
                     </button>
 
                     <!-- Dropdown Menu -->
@@ -104,7 +104,7 @@
                                         </Button>    
                                     </router-link>
                                 </li>
-                                <li class="flex justify-center" @click="closeMenu">
+                                <li class="flex justify-center">
                                     <Results />
                                 </li>
                                 <li class="flex justify-center">

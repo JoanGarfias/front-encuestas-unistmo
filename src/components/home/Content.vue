@@ -16,7 +16,7 @@
         </div>
         <div class="flex flex-col gap-2">
             <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Recopila opiniones</h1>
-            <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-accent">Analiza resultados</h1>
+            <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-muted-foreground">Analiza resultados</h1>
         </div>
         <p class="text-lg lg:text-xl text-muted-foreground">
             Recompilación de datos demograficos y académicos de la Universidad del Istmo Campus Tehuantepec.

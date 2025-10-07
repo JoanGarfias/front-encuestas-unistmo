@@ -26,22 +26,45 @@
         PinInputSlot,
     } from "@/components/ui/pin-input"
 
-    //METHODS
-    const value = ref<string[]>([])
-    const correctPassword = "70722"
-    const error = ref("")
-    const router = useRouter()
+    // METHODS
+    const value = ref<string[]>([]);
+    const error = ref("");
+    const loading = ref(false);
+    const router = useRouter();
 
-    const validatePassword = () => {
-        const pin = value.value.join("")
-        if (pin === correctPassword) {
-            error.value = ""
-            router.push("/estadisticas") 
-            value.value = []
-        } else {
-            error.value = "Contraseña inválida"
+    const API_URL = window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://encuesta.dxicode.com"; 
+
+    const validatePassword = async () => {
+        const pin = value.value.join("");
+
+        loading.value = true;
+        error.value = "";
+
+        try {
+            const response = await fetch(`${API_URL}/api/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: pin }),
+            });
+
+            const data = await response.json();
+
+            if (data.code === 200) {
+                error.value = "";
+                router.push("/estadisticas");
+                value.value = [];
+            } else {
+                error.value = "Contraseña inválida";
+            }
+        } catch (err) {
+            error.value = "Error de conexión con el servidor";
+            console.error("Error:", err);
+        } finally {
+            loading.value = false;
         }
-    }
+    };
 </script>
 
 <template>
