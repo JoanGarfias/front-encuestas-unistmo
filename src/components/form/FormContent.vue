@@ -319,12 +319,13 @@ function validateAll() {
   return ok;
 }
 
+// arriba de onMounted
 const nonNegativeFields = new Set(['age','tiempo','gasto','promedio','peso','altura']);
-const integerFields = new Set(['tiempo','altura']);
-
+const integerFields     = new Set(['tiempo','altura', 'age']);
 
 onMounted(() => {
   const form = formRef.value!;
+
   form.addEventListener('keydown', (e) => {
     const t = e.target as HTMLInputElement | null;
     if (!t || t.type !== 'number' || !t.name) return;
@@ -336,6 +337,11 @@ onMounted(() => {
     if (integerFields.has(t.name) && (e.key === '.' || e.key === ',')) {
       e.preventDefault();
     }
+
+    if (!t || t.type !== 'number') return;
+    const k = e.key;
+    if (['-','+','e','E'].includes(k)) { e.preventDefault(); return; }
+    if (integerFields.has(t.name) && (k === '.' || k === ',')) e.preventDefault();
   }, true);
 
   form.addEventListener('input', (e) => {
@@ -347,17 +353,24 @@ onMounted(() => {
         .replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]/g, '')
         .replace(/\s{2,}/g, ' ')
         .trimStart();
-    } else if (t.type === 'number') {
-      if (nonNegativeFields.has(t.name) && t.value.startsWith('-')) {
-        t.value = t.value.replace('-', '');
-      }
-      if (integerFields.has(t.name)) {
-        const n = parseFloat(t.value);
-        t.value = Number.isFinite(n) ? String(Math.trunc(Math.abs(n))) : '';
-      }
+      if (errors.name) validateOne('name');
+      return;
     }
 
-    if (errors[t.name]) validateOne(t.name);
+    if (t.type === 'number' && integerFields.has(t.name)) {
+      let n = Number(t.value);
+
+      if (!Number.isFinite(n)) {
+        t.value = '';
+        return;
+      }
+
+      t.value = String(Math.trunc(Math.max(0, n)));
+    }
+  
+    if (errors[t.name]) {
+      validateOne(t.name);
+    }
   }, true);
 
   form.addEventListener("blur", (ev) => {
@@ -366,6 +379,7 @@ onMounted(() => {
     if (name && rules[name]) validateOne(name);
   }, true);
 });
+
 
 
 const sendForm = () => {
