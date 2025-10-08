@@ -81,7 +81,7 @@
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Carreras</SelectLabel>
-                  <SelectItem v-for="c in carreras" :key="c.value" :value="c.value">
+                  <SelectItem v-for="c in carrerasOptions" :key="c.value" :value="c.value">
                     {{ c.label }}
                   </SelectItem>
                 </SelectGroup>
@@ -102,7 +102,7 @@
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Semestres</SelectLabel>
-                  <SelectItem v-for="s in semestres" :key="s.value" :value="s.value">
+                  <SelectItem v-for="s in semestresOptions" :key="s.value" :value="s.value">
                     {{ s.label }}
                   </SelectItem>
                 </SelectGroup>
@@ -268,7 +268,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-import { ref, reactive, onMounted, computed } from "vue"
+import { ref, reactive, onMounted, computed, watch } from "vue"
 import { useRoute } from 'vue-router'
 import { useCheckAnswerStore } from "@/stores/checkAnsStore";
 import { Bell, RefreshCcw } from "lucide-vue-next"
@@ -289,6 +289,21 @@ const carrera = ref<string | null>(null);
 const semestre = ref<string | null>(null);
 const errors = reactive<Record<string, string>>({});
 const checkAnswerStore = useCheckAnswerStore()
+
+const carrerasOptions = ref<{ value: string; label: string; }[]>([]);
+const semestresOptions = ref<{ value: string; label: string; }[]>([]);
+
+watch(carrera, () => {
+  if (errors.carrera) {
+    validateOne('carrera');
+  }
+});
+
+watch(semestre, () => {
+  if (errors.semestre) {
+    validateOne('semestre');
+  }
+});
 
 // Validaciones
 const rules: Record<string, (v: any) => string> = {
@@ -340,11 +355,33 @@ function validateAll() {
   return ok;
 }
 
-// arriba de onMounted
 const nonNegativeFields = new Set(['age','tiempo','gasto','promedio','peso','altura']);
 const integerFields     = new Set(['tiempo','altura', 'age']);
 
-onMounted(() => {
+onMounted( async () => {
+
+    try {
+    const resCarreras = await fetch('/api/carreras');
+    const dataCarreras = await resCarreras.json();
+    carrerasOptions.value = dataCarreras.carreras.map((c: string) => ({
+      value: c,
+      label: c
+    }));
+  } catch (error) {
+    console.error("Error al obtener las carreras:", error);
+  }
+
+  try {
+    const resSemestres = await fetch('/api/semestres');
+    const dataSemestres = await resSemestres.json();
+    semestresOptions.value = dataSemestres.map((s: number) => ({
+      value: String(s),
+      label: `${s}°`
+    }));
+  } catch (error) {
+    console.error("Error al obtener los semestres:", error);
+  }
+
   const form = formRef.value!;
 
   form.addEventListener('keydown', (e) => {
@@ -406,8 +443,6 @@ onMounted(() => {
   }, true);
 });
 
-
-
 const sendForm = () => {
   if (!validateAll()) {
     const first = Object.keys(errors).find(k => errors[k]);
@@ -423,22 +458,5 @@ const sexos = [
   { value: "Masculino", label: "Masculino" },
   { value: "Femenino", label: "Femenino" },
   { value: "Otro", label: "Otro" },
-]
-
-const carreras = [
-  { value: "Ing. Química", label: "Ing. Química" },
-  { value: "Ing. En Petróleos", label: "Ing. En Petróleos" },
-  { value: "Ing. En Diseño", label: "Ing. En Diseño" },
-  { value: "Ing. En Computación", label: "Ing. En Computación" },
-  { value: "Lic. En Matemáticas Aplicadas", label: "Lic. En Matemáticas Aplicadas" },
-  { value: "Ing. En Energías Renovables", label: "Ing. En Energías Renovables" },
-]
-
-const semestres = [
-  { value: "1", label: "1°" },
-  { value: "3", label: "3°" },
-  { value: "5", label: "5°" },
-  { value: "7", label: "7°" },
-  { value: "9", label: "9°" },
 ]
 </script>
