@@ -1,7 +1,4 @@
 <script setup lang="ts">
-    //COMPONENTS
-    import Results from './ViewResults.vue';
-
     //ICONS
     import { ClipboardList } from 'lucide-vue-next';
 
@@ -15,10 +12,10 @@
             <p class="text-xs lg:text-sm">Plataforma de encuestas en tiempo real</p>
         </div>
         <div class="flex flex-col gap-2">
-            <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Recopila opiniones</h1>
-            <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-muted-foreground">Analiza resultados</h1>
+            <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-center">Recopila opiniones</h1>
+            <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-muted-foreground text-center">Analiza resultados</h1>
         </div>
-        <p class="text-lg lg:text-xl text-muted-foreground">
+        <p class="text-lg lg:text-xl text-muted-foreground text-center">
             Recompilación de datos demograficos y académicos de la Universidad del Istmo Campus Tehuantepec.
         </p>
         <div class="flex gap-4">
@@ -27,7 +24,6 @@
                     <ClipboardList /> Hacer Encuesta
                 </Button>
             </router-link>
-            <Results />
         </div>
     </div>
 </template>

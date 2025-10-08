@@ -237,12 +237,25 @@
   </Card>
 
   <div v-if="checkAnswerStore.isAnswered">
-    Ya has respondido el formulario
+    <Empty class="from-muted/50 to-background h-full bg-gradient-to-b from-30%">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <ClipboardList />
+        </EmptyMedia>
+        <EmptyTitle>Ya has respondido el formulario</EmptyTitle>
+        <EmptyDescription>
+          Gracias por haber respondido este formulario.
+        </EmptyDescription>
+      </EmptyHeader>
+    </Empty>
   </div>
 
 </template>
 
 <script setup lang="ts">
+  //ICONS
+  import { ClipboardList } from 'lucide-vue-next';
+
 // Componentes UI
 import {
   Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter,
@@ -258,6 +271,14 @@ import { Button } from "@/components/ui/button"
 import { ref, reactive, onMounted, computed } from "vue"
 import { useRoute } from 'vue-router'
 import { useCheckAnswerStore } from "@/stores/checkAnsStore";
+import { Bell, RefreshCcw } from "lucide-vue-next"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
 
 const route = useRoute()
 // Asumo que la ruta del formulario es '/'. Si es otra, puedes cambiarla aquí.

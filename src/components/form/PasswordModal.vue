@@ -19,11 +19,12 @@
         PinInputGroup,
         PinInputSlot,
     } from "@/components/ui/pin-input"
+    import { Spinner } from "@/components/ui/spinner"
 
     // METHODS
-    import { useSessionStore } from "@/stores/sessionStore"
+    import { useCheckAnswerStore } from "@/stores/checkAnsStore"
 
-    const { login } = useSessionStore()
+    const { checkAnswer } = useCheckAnswerStore()
 
     const value = ref<string[]>([]);
     const error = ref("");
@@ -52,7 +53,7 @@
                 error.value = "";
                 value.value = [];
                 console.log("Login exitoso");
-                login();
+                checkAnswer();
             } else {
                 error.value = "Contraseña inválida";
             }
@@ -84,7 +85,6 @@
                                   type="number"
                                   :class="error ? 'border-red-600' : 'border-gray-300'"
                                 />
-
                             </PinInputGroup>
                         </PinInput>
                     </div>
@@ -93,7 +93,10 @@
             </DialogHeader>
 
             <DialogFooter>
-                <Button @click="validatePassword" class="cursor-pointer">Aceptar</Button>
+                <Button @click="validatePassword" :disabled="loading" class="cursor-pointer">
+                    <Spinner v-if="loading" class="w-4 h-4" />
+                    <p>{{ loading ? 'Validando...' : 'Aceptar' }}</p>
+                </Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
