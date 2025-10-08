@@ -367,9 +367,9 @@ onMounted( async () => {
   try {
     const resCarreras = await fetch(`${API_URL}/api/carreras`);
     const dataCarreras = await resCarreras.json();
-    carrerasOptions.value = dataCarreras.carreras.map((c: string) => ({
-      value: c,
-      label: c
+    carrerasOptions.value = dataCarreras.carreras.map((c: { id: number; name: string }) => ({
+      value: String(c.id),
+      label: c.name
     }));
   } catch (error) {
     console.error("Error al obtener las carreras:", error);
@@ -447,15 +447,85 @@ onMounted( async () => {
   }, true);
 });
 
-const sendForm = () => {
+const sendForm = async () => {
   if (!validateAll()) {
     const first = Object.keys(errors).find(k => errors[k]);
     if (first) document.getElementsByName(first)[0]?.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
 
-  console.log("Formulario enviado (válido) ✔️");
-  checkAnswerStore.checkAnswer();
+  const formData = new FormData(formRef.value!);
+  const dataToSend = Object.fromEntries(formData.entries());
+
+  dataToSend.carrera = carrera.value ?? '';
+  dataToSend.semestre = semestre.value ?? '';
+
+  // Construir payload real a partir de los campos del formulario
+  const fd = new FormData(formRef.value!);
+  const raw = Object.fromEntries(fd.entries());
+
+  // Helpers para parsear y normalizar
+  const toNumber = (v: any) => {
+    const s = (v ?? '').toString().trim();
+    if (s === '') return null;
+    const n = Number(s);
+    return Number.isNaN(n) ? null : n;
+  };
+
+  const yesNoToInt = (v: any) => {
+    if (v === null || v === undefined) return 0;
+    const s = v.toString().toLowerCase();
+    if (s === 'si' || s === 's' || s === 'yes' || s === '1' || s === 'true') return 1;
+    return 0;
+  };
+
+  // Mapear campos del formulario a la API esperada
+  const payload = {
+    carrera: carrera.value ?? raw.carrera ?? '',
+    nombre: (raw.name ?? '').toString().trim(),
+    edad: toNumber(raw.age) ?? 0,
+    // normalizar sexo a 'M'/'F'/'O' --- asumir base en las opciones
+    sexo: (() => {
+      const s = (raw.sexo ?? '').toString().toLowerCase();
+      if (s.startsWith('m')) return 'M';
+      if (s.startsWith('f')) return 'F';
+      if (s.startsWith('o')) return 'O';
+      return (raw.sexo ?? '').toString();
+    })(),
+    semestre: toNumber(semestre.value ?? raw.semestre) ?? 0,
+    promedio_anterior: toNumber(raw.promedio) ?? 0,
+    tiempo_traslado: toNumber(raw.tiempo) ?? 0,
+    trabaja: yesNoToInt(raw.trabaja),
+    gasto_mensual: toNumber(raw.gasto) ?? 0,
+    discapacidad: yesNoToInt(raw.discapacidad),
+    peso: toNumber(raw.peso) ?? 0,
+    altura: toNumber(raw.altura) ?? 0,
+    correo: (raw.email ?? '').toString().trim(),
+  } as Record<string, any>;
+
+  try {
+    console.log('Enviando payload real a /api/crearregistro:', payload);
+    const response = await fetch(`${API_URL}/api/crearregistro`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error del servidor: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log('Respuesta del servidor:', result);
+    console.log('Formulario enviado (válido) ✔️');
+    checkAnswerStore.checkAnswer();
+
+  } catch (error) {
+    console.error('No se pudo enviar el formulario:', error);
+    alert('Hubo un problema al enviar tu encuesta. Por favor, inténtalo de nuevo.');
+  }
 }
 
 const sexos = [
