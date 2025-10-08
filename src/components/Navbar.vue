@@ -42,7 +42,7 @@
 
 <template>
     <header>
-        <nav class="w-screen py-4 px-10">
+        <nav class="w-full py-4 px-10">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
                     <router-link to="/">
