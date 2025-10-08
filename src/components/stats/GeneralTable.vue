@@ -15,7 +15,7 @@ const carreras = ref([])
 
 const getReporte = async () => {
     try {
-        const response = await fetch(`${API_URL}/api/reporte`)
+        const response = await fetch(`${API_URL}/api/reporte?&num_elements=500`)
         const data = await response.json()
         console.log(data)
         return data
