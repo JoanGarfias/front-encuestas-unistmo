@@ -1,35 +1,11 @@
-<template>
-  <div class="flex flex-col gap-8 mx-auto max-w-7xl">
-    <div class="flex flex-col items-center gap-2">
-      <h1
-        class="text-3xl text-center font-bold leading-tight md:text-5xl text-primary"
-      >
-        Análisis Estadístico
-      </h1>
-      <p class="text-center text-md text-muted-foreground">
-        Datos recopilados de los estudiantes universitarios
-      </p>
-    </div>
-
-    <!-- Contenedor de los graficos -->
-    <div class="grid md:grid-cols-2 gap-8">
-      <BarChart
-        title="Bar Chart"
-        :chartData="barData"
-        :chartOptions="BarChartOptions"
-      />
-      <PieChart
-        title="Pie Chart"
-        :chartData="pieData"
-        :chartOptions="PieChartOptions"
-      />
-    </div>
-  </div>
-</template>
-
 <script setup lang="js">
 import BarChart from "./charts/BarChart.vue"
 import PieChart from "./charts/PieChart.vue"
+import PasswordModal from "../form/PasswordModal.vue"
+
+import { useSessionStore } from "@/stores/sessionStore"
+
+const sessionStore = useSessionStore()
 
 const defaultColors = [
   "#FF6384",
@@ -83,3 +59,43 @@ const PieChartOptions = {
   },
 }
 </script>
+
+
+
+
+<template>
+
+  <!--MODAL DE CONTRASEÑA-->
+  <PasswordModal v-if="!sessionStore.isLogged"/>
+
+  <!-- VISTA DE ESTADÍSTICAS-->
+  <div
+  class="flex flex-col gap-8 mx-auto max-w-7xl"
+  v-else
+  >
+    <div class="flex flex-col items-center gap-2">
+      <h1
+        class="text-3xl text-center font-bold leading-tight md:text-5xl text-primary"
+      >
+        Análisis Estadístico
+      </h1>
+      <p class="text-center text-md text-muted-foreground">
+        Datos recopilados de los estudiantes universitarios
+      </p>
+    </div>
+
+    <!-- Contenedor de los graficos -->
+    <div class="grid md:grid-cols-2 gap-8">
+      <BarChart
+        title="Bar Chart"
+        :chartData="barData"
+        :chartOptions="BarChartOptions"
+      />
+      <PieChart
+        title="Pie Chart"
+        :chartData="pieData"
+        :chartOptions="PieChartOptions"
+      />
+    </div>
+  </div>
+</template>

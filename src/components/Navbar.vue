@@ -3,8 +3,6 @@
 
     //COMPONENTS
     import Theme from './Theme.vue';
-    import Results from './home/ViewResults.vue';
-
     //ICONS
     import { ChartColumn } from 'lucide-vue-next';
     import { ClipboardList } from 'lucide-vue-next';
@@ -65,7 +63,11 @@
                         </router-link>
                     </li>
                     <li>
-                        <Results />
+                        <router-link to="/estadisticas">
+                            <Button variant="outline" class="cursor-pointer">
+                                <ClipboardList /> Resultados
+                            </Button>
+                        </router-link>
                     </li>
                     <li>
                         <Theme />
@@ -88,24 +90,32 @@
                         leave-from-class="opacity-100 scale-100"
                         leave-to-class="opacity-0 scale-95"
                     >
-                        <div 
-                            v-if="isMenuOpen" 
+                        <div
+                            v-if="isMenuOpen"
                             class="absolute right-0 mt-2 w-46 p-2 rounded-lg shadow-lg bg-white dark:bg-accent ring-1 ring-black ring-opacity-5 overflow-hidden z-10"
                         >
                             <ul class="py-2 flex flex-col gap-4">
                                 <li class="flex justify-center">
-                                    <router-link 
-                                        to="/formulario" 
+                                    <router-link
+                                        to="/formulario"
                                         @click="closeMenu"
                                         class="flex items-center gap-3"
                                     >
                                         <Button variant="outline" class="cursor-pointer">
                                             <ClipboardList /> Hacer Encuesta
-                                        </Button>    
+                                        </Button>
                                     </router-link>
                                 </li>
                                 <li class="flex justify-center">
-                                    <Results />
+                                    <router-link
+                                        to="/estadisticas"
+                                        @click="closeMenu"
+                                        class="flex items-center gap-3"
+                                    >
+                                        <Button variant="outline" class="cursor-pointer">
+                                            <ClipboardList /> Estadísticas
+                                        </Button>
+                                    </router-link>
                                 </li>
                                 <li class="flex justify-center">
                                     <Theme />
