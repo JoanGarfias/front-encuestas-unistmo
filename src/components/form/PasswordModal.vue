@@ -1,6 +1,8 @@
 <script setup lang="ts">
+    import { ref, watch } from 'vue';
+    import { useRouter } from 'vue-router'
+
     //ICONS
-    import { ref } from 'vue';
     import { ChartNoAxesColumn } from 'lucide-vue-next';
 
     //UI
@@ -25,10 +27,12 @@
     import { useSessionStore } from "@/stores/sessionStore"
 
     const { login } = useSessionStore()
+    const router = useRouter()
 
     const value = ref<string[]>([]);
     const error = ref("");
     const loading = ref(false);
+    const open = ref(true);
 
     const API_URL = window.location.hostname === "localhost"
     ? "http://localhost:5000"
@@ -64,10 +68,16 @@
             loading.value = false;
         }
     };
+
+    watch(open, (value) => {
+        if (!value) {
+            router.push('/') 
+        }
+    })
 </script>
 
 <template>
-    <Dialog :open="true">
+    <Dialog v-model:open="open">
         <DialogContent class="w-sm">
             <DialogHeader>
                 <DialogTitle>Ingresa la contraseña</DialogTitle>
