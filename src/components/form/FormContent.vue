@@ -351,7 +351,7 @@ onMounted(() => {
     const t = e.target as HTMLInputElement | null;
     if (!t || t.type !== 'number' || !t.name) return;
 
-    if (nonNegativeFields.has(t.name) && ['.','-','+','e','E'].includes(e.key)) {
+    if (nonNegativeFields.has(t.name) && ['-','+','e','E'].includes(e.key)) {
       e.preventDefault();
     }
     // en enteros, bloquear también "." y ","
@@ -369,14 +369,17 @@ onMounted(() => {
     const t = e.target as HTMLInputElement | null;
     if (!t || !t.name) return;
 
-    if (t.name === 'name') {
-      t.value = t.value
-        .replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]/g, '')
-        .replace(/\s{2,}/g, ' ')
-        .trimStart();
-      if (errors.name) validateOne('name');
-      return;
+  if (t.name === 'name') {
+    const valorOriginal = t.value;
+    const valorFormateado = valorOriginal
+      .replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]/g, '')
+      .replace(/\s{2,}/g, ' ')
+      .trimStart();
+
+    if (valorOriginal !== valorFormateado) {
+      t.value = valorFormateado;
     }
+  }
 
     if (t.type === 'number' && integerFields.has(t.name)) {
       let n = Number(t.value);
@@ -390,7 +393,9 @@ onMounted(() => {
     }
   
     if (errors[t.name]) {
-      validateOne(t.name);
+      setTimeout(() => {
+        errors[t.name] = "";
+      }, 0);
     }
   }, true);
 
