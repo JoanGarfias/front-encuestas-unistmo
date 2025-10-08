@@ -1,5 +1,5 @@
 <template>
-  <Card class="border rounded-xl shadow-sm gap-0" v-if="!checkAnswerStore.isAnswered">
+  <Card class="border rounded-xl shadow-sm gap-0" v-show="!checkAnswerStore.isAnswered">
     <CardHeader>
       <CardTitle class="text-2xl md:text-3xl font-semibold tracking-tight">
         Información del alumno
@@ -236,7 +236,7 @@
     </CardFooter>
   </Card>
 
-  <div v-else>
+  <div v-if="checkAnswerStore.isAnswered">
     Ya has respondido el formulario
   </div>
 
