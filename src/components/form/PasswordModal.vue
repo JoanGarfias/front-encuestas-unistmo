@@ -22,9 +22,9 @@
     import { Spinner } from "@/components/ui/spinner"
 
     // METHODS
-    import { useCheckAnswerStore } from "@/stores/checkAnsStore"
+    import { useSessionStore } from "@/stores/sessionStore"
 
-    const { checkAnswer } = useCheckAnswerStore()
+    const { login } = useSessionStore()
 
     const value = ref<string[]>([]);
     const error = ref("");
@@ -53,7 +53,7 @@
                 error.value = "";
                 value.value = [];
                 console.log("Login exitoso");
-                checkAnswer();
+                login();
             } else {
                 error.value = "Contraseña inválida";
             }
