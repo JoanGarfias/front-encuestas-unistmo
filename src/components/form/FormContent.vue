@@ -1,5 +1,5 @@
 <template>
-  <Card class="border rounded-xl shadow-sm gap-0">
+  <Card class="border rounded-xl shadow-sm gap-0" v-if="!checkAnswerStore.isAnswered">
     <CardHeader>
       <CardTitle class="text-2xl md:text-3xl font-semibold tracking-tight">
         Información del alumno
@@ -235,10 +235,15 @@
       </Button>
     </CardFooter>
   </Card>
+
+  <div v-else>
+    Ya has respondido el formulario
+  </div>
+
 </template>
 
 <script setup lang="ts">
-// Componentes UI 
+// Componentes UI
 import {
   Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter,
 } from "@/components/ui/card"
@@ -250,18 +255,23 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-import { ref, reactive, onMounted } from "vue"
+import { ref, reactive, onMounted, computed } from "vue"
+import { useRoute } from 'vue-router'
 import { useCheckAnswerStore } from "@/stores/checkAnsStore";
-const { checkAnswer } = useCheckAnswerStore();
+
+const route = useRoute()
+// Asumo que la ruta del formulario es '/'. Si es otra, puedes cambiarla aquí.
+const isFormPage = computed(() => route.path === '/')
 
 const formRef = ref<HTMLFormElement | null>(null);
-const carrera = ref<string | null>(null);  
-const semestre = ref<string | null>(null);  
+const carrera = ref<string | null>(null);
+const semestre = ref<string | null>(null);
 const errors = reactive<Record<string, string>>({});
+const checkAnswerStore = useCheckAnswerStore()
 
 // Validaciones
 const rules: Record<string, (v: any) => string> = {
-  email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "" : "Ingresa un correo válido.",
+  email: (v) => /^[^ -]+@[^ -]+\.[^ -]+$/.test(v) ? "" : "Ingresa un correo válido.",
   name:  (v) => {
     if (!v) return "El nombre es obligatorio.";
     if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/.test(v)) return "Solo letras y espacios.";
@@ -319,7 +329,7 @@ onMounted(() => {
     const t = e.target as HTMLInputElement | null;
     if (!t || t.type !== 'number' || !t.name) return;
 
-    if (nonNegativeFields.has(t.name) && ['-','+','e','E'].includes(e.key)) {
+    if (nonNegativeFields.has(t.name) && ['.','-','+','e','E'].includes(e.key)) {
       e.preventDefault();
     }
     // en enteros, bloquear también "." y ","
@@ -366,7 +376,7 @@ const sendForm = () => {
   }
 
   console.log("Formulario enviado (válido) ✔️");
-  checkAnswer();
+  checkAnswerStore.checkAnswer();
 }
 
 const sexos = [
