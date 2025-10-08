@@ -237,12 +237,25 @@
   </Card>
 
   <div v-if="checkAnswerStore.isAnswered">
-    Ya has respondido el formulario
+    <Empty class="from-muted/50 to-background h-full bg-gradient-to-b from-30%">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <ClipboardList />
+        </EmptyMedia>
+        <EmptyTitle>Ya has respondido el formulario</EmptyTitle>
+        <EmptyDescription>
+          Gracias por haber respondido este formulario.
+        </EmptyDescription>
+      </EmptyHeader>
+    </Empty>
   </div>
 
 </template>
 
 <script setup lang="ts">
+  //ICONS
+  import { ClipboardList } from 'lucide-vue-next';
+
 // Componentes UI
 import {
   Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter,
@@ -258,6 +271,14 @@ import { Button } from "@/components/ui/button"
 import { ref, reactive, onMounted, computed } from "vue"
 import { useRoute } from 'vue-router'
 import { useCheckAnswerStore } from "@/stores/checkAnsStore";
+import { Bell, RefreshCcw } from "lucide-vue-next"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
 
 const route = useRoute()
 // Asumo que la ruta del formulario es '/'. Si es otra, puedes cambiarla aquí.
@@ -271,8 +292,8 @@ const checkAnswerStore = useCheckAnswerStore()
 
 // Validaciones
 const rules: Record<string, (v: any) => string> = {
-  email: (v) => /^[^ -]+@[^ -]+\.[^ -]+$/.test(v) ? "" : "Ingresa un correo válido.",
-  name:  (v) => {
+    email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "" : "Ingresa un correo válido.",
+    name:  (v) => {
     if (!v) return "El nombre es obligatorio.";
     if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/.test(v)) return "Solo letras y espacios.";
     if (v.trim().length < 2) return "Mínimo 2 caracteres.";
@@ -282,10 +303,10 @@ const rules: Record<string, (v: any) => string> = {
   age:   (v) => { const n=Number(v); return Number.isInteger(n)&&n>=15&&n<=80 ? "" : "Edad obligatoria."; },
   carrera: () => carrera.value ? "" : "Selecciona tu carrera.",
   semestre: () => semestre.value ? "" : "Selecciona tu semestre.",
-  promedio: (v) => { const n=Number(v); return !Number.isNaN(n)&&n>=0&&n<=10 ? "" : "Promedio entre 0 y 10."; },
-  tiempo:   (v) => { const n=Number(v); return Number.isInteger(n)&&n>=0&&n<=300 ? "" : "En minutos."; },
+  promedio: (v) => { if (v.trim() === '') return "El promedio es obligatorio."; const n = Number(v); return !Number.isNaN(n) && n >= 0 && n <= 10 ? "" : "Promedio entre 0 y 10."; },
+  tiempo: (v) => { if (v.trim() === '') return "El tiempo es obligatorio."; const n = Number(v); return Number.isInteger(n) && n >= 0 && n <= 300 ? "" : "Debe ser un número en minutos."; },
   trabaja:  (v) => v ? "" : "Indica si trabajas.",
-  gasto:    (v) => { const n=Number(v); return !Number.isNaN(n)&&n>=0 ? "" : "Gasto mensual debe ser 0 o mayor."; },
+  gasto: (v) => { if (v.trim() === '') return "El gasto mensual es obligatorio."; const n = Number(v); return !Number.isNaN(n) && n >= 0 ? "" : "Debe ser un número (0 o mayor)."; },
   peso:     (v) => { const n=Number(v); return !Number.isNaN(n)&&n>20&&n<=300 ? "" : "Peso obligatorio."; },
   altura:   (v) => { const n=Number(v); return Number.isInteger(n)&&n>80&&n<=250 ? "" : "Altura obligatoria."; },
   discapacidad: (v) => v ? "" : "Indica si tienes alguna discapacidad.",
@@ -319,12 +340,13 @@ function validateAll() {
   return ok;
 }
 
+// arriba de onMounted
 const nonNegativeFields = new Set(['age','tiempo','gasto','promedio','peso','altura']);
-const integerFields = new Set(['tiempo','altura']);
-
+const integerFields     = new Set(['tiempo','altura', 'age']);
 
 onMounted(() => {
   const form = formRef.value!;
+
   form.addEventListener('keydown', (e) => {
     const t = e.target as HTMLInputElement | null;
     if (!t || t.type !== 'number' || !t.name) return;
@@ -336,6 +358,11 @@ onMounted(() => {
     if (integerFields.has(t.name) && (e.key === '.' || e.key === ',')) {
       e.preventDefault();
     }
+
+    if (!t || t.type !== 'number') return;
+    const k = e.key;
+    if (['-','+','e','E'].includes(k)) { e.preventDefault(); return; }
+    if (integerFields.has(t.name) && (k === '.' || k === ',')) e.preventDefault();
   }, true);
 
   form.addEventListener('input', (e) => {
@@ -347,17 +374,24 @@ onMounted(() => {
         .replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]/g, '')
         .replace(/\s{2,}/g, ' ')
         .trimStart();
-    } else if (t.type === 'number') {
-      if (nonNegativeFields.has(t.name) && t.value.startsWith('-')) {
-        t.value = t.value.replace('-', '');
-      }
-      if (integerFields.has(t.name)) {
-        const n = parseFloat(t.value);
-        t.value = Number.isFinite(n) ? String(Math.trunc(Math.abs(n))) : '';
-      }
+      if (errors.name) validateOne('name');
+      return;
     }
 
-    if (errors[t.name]) validateOne(t.name);
+    if (t.type === 'number' && integerFields.has(t.name)) {
+      let n = Number(t.value);
+
+      if (!Number.isFinite(n)) {
+        t.value = '';
+        return;
+      }
+
+      t.value = String(Math.trunc(Math.max(0, n)));
+    }
+  
+    if (errors[t.name]) {
+      validateOne(t.name);
+    }
   }, true);
 
   form.addEventListener("blur", (ev) => {
@@ -366,6 +400,7 @@ onMounted(() => {
     if (name && rules[name]) validateOne(name);
   }, true);
 });
+
 
 
 const sendForm = () => {

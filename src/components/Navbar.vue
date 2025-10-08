@@ -42,13 +42,13 @@
 
 <template>
     <header>
-        <nav class="w-screen py-4 px-10">
+        <nav class="w-full py-4 px-10">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
                     <router-link to="/">
                         <div class="flex gap-2">
                             <span><ChartColumn /></span>
-                            <p>Encuestas</p>
+                            <p class="font-bold">Encuestas</p>
                         </div>
                     </router-link>
                 </div>
