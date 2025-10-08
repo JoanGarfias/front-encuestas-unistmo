@@ -280,6 +280,10 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 
+const API_URL = window.location.hostname === "localhost"
+  ? "http://localhost:5000"
+  : "https://encuesta.dxicode.com";
+
 const route = useRoute()
 // Asumo que la ruta del formulario es '/'. Si es otra, puedes cambiarla aquí.
 const isFormPage = computed(() => route.path === '/')
@@ -360,8 +364,8 @@ const integerFields     = new Set(['tiempo','altura', 'age']);
 
 onMounted( async () => {
 
-    try {
-    const resCarreras = await fetch('/api/carreras');
+  try {
+    const resCarreras = await fetch(`${API_URL}/api/carreras`);
     const dataCarreras = await resCarreras.json();
     carrerasOptions.value = dataCarreras.carreras.map((c: string) => ({
       value: c,
@@ -372,14 +376,14 @@ onMounted( async () => {
   }
 
   try {
-    const resSemestres = await fetch('/api/semestres');
+    const resSemestres = await fetch(`${API_URL}/api/semestres`);
     const dataSemestres = await resSemestres.json();
     semestresOptions.value = dataSemestres.map((s: number) => ({
       value: String(s),
       label: `${s}°`
     }));
   } catch (error) {
-    console.error("Error al obtener los semestres:", error);
+  console.error("Error al obtener los semestres:", error);
   }
 
   const form = formRef.value!;
