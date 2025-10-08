@@ -292,8 +292,8 @@ const checkAnswerStore = useCheckAnswerStore()
 
 // Validaciones
 const rules: Record<string, (v: any) => string> = {
-  email: (v) => /^[^ -]+@[^ -]+\.[^ -]+$/.test(v) ? "" : "Ingresa un correo válido.",
-  name:  (v) => {
+    email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "" : "Ingresa un correo válido.",
+    name:  (v) => {
     if (!v) return "El nombre es obligatorio.";
     if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/.test(v)) return "Solo letras y espacios.";
     if (v.trim().length < 2) return "Mínimo 2 caracteres.";
