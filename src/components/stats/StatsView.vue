@@ -2,6 +2,7 @@
 import ChartsContainer from "./charts/ChartsContainer.vue"
 import PasswordModal from "../form/PasswordModal.vue"
 import GeneralTable from "./GeneralTable.vue"
+import AnalyticsContainer from "./AnalyticsContainer.vue"
 
 import { useSessionStore } from "@/stores/sessionStore"
 
@@ -25,6 +26,7 @@ const sessionStore = useSessionStore()
       </p>
     </div>
     <GeneralTable />
+    <AnalyticsContainer />
     <ChartsContainer />
   </div>
 </template>
