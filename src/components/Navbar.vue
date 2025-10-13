@@ -47,7 +47,7 @@
                 <div class="flex items-center">
                     <router-link to="/">
                         <div class="flex gap-2">
-                            <span><ChartColumn /></span>
+                            <span class="font-bold"><ChartColumn /></span>
                             <p class="font-bold">Encuestas</p>
                         </div>
                     </router-link>

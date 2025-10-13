@@ -1,14 +1,52 @@
 <script setup lang="js">
+import { ref, onMounted } from 'vue'; 
+
+// COMPONENTS
 import ChartsContainer from "./charts/ChartsContainer.vue"
 import PasswordModal from "../form/PasswordModal.vue"
 import GeneralTable from "./GeneralTable.vue"
 import AnalyticsContainer from "./AnalyticsContainer.vue"
+import TotalStudents from "./TotalStudents.vue";
 
 import { useSessionStore } from "@/stores/sessionStore"
-import { Sheet } from "lucide-vue-next"
-import DownloadReport from "./DownloadReport.vue"
 
 const sessionStore = useSessionStore()
+
+// METHODS
+const datos = ref({});
+const error = ref("");
+const loading = ref(false);
+
+const API_URL = window.location.hostname === "localhost"
+  ? "http://localhost:5000"
+  : "https://encuesta.dxicode.com";
+
+const obtenerDatos = async () => {
+  loading.value = true;
+  error.value = "";
+
+  try {
+    const response = await fetch(`${API_URL}/api/desviacionestandar`); 
+    const data = await response.json();
+
+    if (response.ok) {
+      datos.value = data;
+      console.log("Datos recibidos:", data);
+    } else {
+      error.value = "Error al obtener los datos";
+    }
+  } catch (err) {
+    error.value = "Error de conexión con el servidor";
+    console.error("Error:", err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  obtenerDatos();
+});
+
 </script>
 
 <template>
@@ -27,9 +65,17 @@ const sessionStore = useSessionStore()
         Datos recopilados de los estudiantes universitarios
       </p>
     </div>
-    <DownloadReport />
+    <TotalStudents 
+     :totalAlumnos="datos.total_alumnos"
+     :loading="loading"
+     :error="error"
+    />
     <GeneralTable />
-    <AnalyticsContainer />
+    <AnalyticsContainer 
+     :datos="datos"
+     :loading="loading"
+     :error="error"
+    />
     <ChartsContainer />
   </div>
 </template>
