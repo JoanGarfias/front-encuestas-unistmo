@@ -286,25 +286,41 @@ const promedioData = computed(() => {
 })
 
 const gastoMensualData = computed(() => {
-  const gastosPorCarrera = reporte.value.reduce((acc, curr) => {
-    if (!acc[curr.carrera]) {
-      acc[curr.carrera] = { sum: 0, count: 0 }
-    }
-    acc[curr.carrera].sum += parseFloat(curr.gasto_mensual)
-    acc[curr.carrera].count++
-    return acc
-  }, {})
+  // Initialize an object to store sum and count for each carrera
+  const gastosPorCarrera = {}
 
-  const carreras = Object.keys(gastosPorCarrera)
+  // First, initialize all carreras with 0 values
+  carreras.value.forEach(carrera => {
+    gastosPorCarrera[carrera] = { sum: 0, count: 0 }
+  })
+
+  // Then process the report data
+  reporte.value.forEach(estudiante => {
+    if (!estudiante.carrera) return // Skip if no carrera
+
+    const gasto = parseFloat(estudiante.gasto_mensual)
+    if (!isNaN(gasto) && isFinite(gasto)) { // Only process valid numbers
+      if (!gastosPorCarrera[estudiante.carrera]) {
+        gastosPorCarrera[estudiante.carrera] = { sum: 0, count: 0 }
+      }
+      gastosPorCarrera[estudiante.carrera].sum += gasto
+      gastosPorCarrera[estudiante.carrera].count++
+    }
+  })
+
+  // Filter out carreras with no data
+  const carrerasConDatos = Object.entries(gastosPorCarrera)
+    .filter(([_, data]) => data.count > 0)
+    .sort(([a], [b]) => a.localeCompare(b)) // Sort alphabetically
 
   return {
-    labels: carreras,
+    labels: carrerasConDatos.map(([carrera]) => carrera),
     datasets: [{
       label: 'Gasto mensual promedio',
-      data: carreras.map(carrera =>
-        (gastosPorCarrera[carrera].sum / gastosPorCarrera[carrera].count).toFixed(2)
+      data: carrerasConDatos.map(([_, data]) =>
+        parseFloat((data.sum / data.count).toFixed(2))
       ),
-      backgroundColor: carreras.map((_, i) => defaultColors[i % defaultColors.length]),
+      backgroundColor: carrerasConDatos.map((_, i) => defaultColors[i % defaultColors.length]),
       borderWidth: 1,
     }]
   }

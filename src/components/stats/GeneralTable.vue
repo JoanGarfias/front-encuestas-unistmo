@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Button } from "@/components/ui/button"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { ref, computed, onMounted } from "vue"
+import { Sheet } from "lucide-vue-next"
 
 const API_URL = window.location.hostname === "localhost"
     ? "http://localhost:5000"
