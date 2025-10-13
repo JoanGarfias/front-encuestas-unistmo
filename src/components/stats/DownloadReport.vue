@@ -9,11 +9,8 @@ const API_URL = window.location.hostname === "localhost"
 
 const isLoading = ref(false);
 
-// ...existing code removed; downloadReport implementation appears later in file
-
 const getFileNameFromContentDisposition = (contentDisposition: string, blob: Blob) => {
     if (!contentDisposition) return '';
-    // RFC5987 filename* (with encoding)
     const filenameStarMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
     if (filenameStarMatch && filenameStarMatch[1]) {
         try {
@@ -23,7 +20,6 @@ const getFileNameFromContentDisposition = (contentDisposition: string, blob: Blo
         }
     }
 
-    // Regular filename="..." or filename=...
     const filenameMatch = contentDisposition.match(/filename\s*=\s*"?([^";]+)"?/i);
     if (filenameMatch && filenameMatch[1]) {
         return filenameMatch[1];
@@ -92,14 +88,10 @@ const downloadReport = async () => {
                     <template v-else>
                         <Loader2 class="w-4 h-4 mr-2 animate-spin" aria-hidden="true" />
                         <span>Descargando...</span>
-                        <span class="sr-only">Descargando reporte, por favor espera</span>
+                        <span class="sr-only">Descargando reporte...</span>
                     </template>
                 </div>
             </Button>
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>
