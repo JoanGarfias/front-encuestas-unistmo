@@ -1,5 +1,9 @@
 # Encuestas UNISTMO - Frontend
 
+<img width="1922" height="916" alt="image" src="https://github.com/user-attachments/assets/aef7dd54-9a9d-4e21-a97c-84e9bac952c4" />
+<img width="1922" height="916" alt="image" src="https://github.com/user-attachments/assets/398bb7b2-a554-42c0-8c7c-147be81f4d60" />
+
+
 Este repositorio contiene el código del frontend para una plataforma de encuestas, desarrollada como parte de un proyecto académico para la materia de Probabilidad y Estadística de la carrera de Ingeniería en Computación en la Universidad del Istmo (UNISTMO).
 
 El objetivo principal del proyecto es la recolección y el análisis de datos obtenidos a través de una encuesta simple, permitiendo a los estudiantes aplicar conceptos teóricos en un caso práctico.
