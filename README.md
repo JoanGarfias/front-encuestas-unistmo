@@ -1,42 +1,72 @@
-# encuestas-unistmo
+# Encuestas UNISTMO - Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Este repositorio contiene el código del frontend para una plataforma de encuestas, desarrollada como parte de un proyecto académico para la materia de Probabilidad y Estadística de la carrera de Ingeniería en Computación en la Universidad del Istmo (UNISTMO).
 
-## Recommended IDE Setup
+El objetivo principal del proyecto es la recolección y el análisis de datos obtenidos a través de una encuesta simple, permitiendo a los estudiantes aplicar conceptos teóricos en un caso práctico.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Repositorio del Backend
 
-## Recommended Browser Setup
+Este proyecto solo constituye el frontend de la aplicación. El backend, desarrollado en Python con Flask, se encuentra en el siguiente repositorio:
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+[**https://github.com/JoanGarfias/back-encuestas-unistmo**](https://github.com/JoanGarfias/back-encuestas-unistmo)
 
-## Type Support for `.vue` Imports in TS
+## Características
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+*   **Interfaz de Encuesta Intuitiva:** Un formulario claro y fácil de usar para que los usuarios respondan.
+*   **Visualización de Datos:** Gráficas y tablas que resumen los resultados de la encuesta en tiempo real.
+*   **Acceso a Estadísticas:** Una vista protegida por contraseña para visualizar los datos recopilados.
+*   **Diseño Responsivo:** Adaptable a diferentes tamaños de pantalla (móvil y escritorio).
 
-## Customize configuration
+## Tecnologías Utilizadas
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+*   **Framework:** [Vue.js 3](https://vuejs.org/)
+*   **Lenguaje:** [TypeScript](https://www.typescriptlang.org/)
+*   **Build Tool:** [Vite](https://vitejs.dev/)
+*   **Enrutamiento:** [Vue Router](https://router.vuejs.org/)
+*   **Manejo de Estado:** [Pinia](https://pinia.vuejs.org/)
+*   **Estilos CSS:** [Tailwind CSS](https://tailwindcss.com/)
+*   **Componentes UI:**
+    *   UI Primitivas inspiradas en [Shadcn UI](https://www.shadcn-ui.com/).
+    *   Iconos de [Lucide](https://lucide.dev/).
+*   **Visualización de Datos:** [Chart.js](https://www.chartjs.org/) con [vue-chartjs](https://vue-chartjs.org/).
+*   **Tablas de Datos:** [TanStack Table for Vue](https://tanstack.com/table/v8/docs/adapters/vue-table).
 
-## Project Setup
+## Instalación y Ejecución
 
-```sh
+Sigue estos pasos para levantar el proyecto en un entorno de desarrollo local.
+
+**1. Clonar el repositorio:**
+
+```bash
+git clone https://github.com/JoanGarfias/front-encuestas-unistmo.git
+cd front-encuestas-unistmo
+```
+
+**2. Instalar dependencias:**
+
+Se recomienda usar `npm`.
+
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+**3. Configurar el backend:**
 
-```sh
+Asegúrate de que el servidor del backend esté corriendo. Sigue las instrucciones en el [repositorio del backend](https://github.com/JoanGarfias/back-encuestas-unistmo) para su configuración.
+
+**4. Ejecutar el servidor de desarrollo:**
+
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+El sitio estará disponible en `http://localhost:5173` (o el puerto que Vite asigne).
 
-```sh
-npm run build
-```
+### Comandos adicionales
+
+*   **Compilar para producción:** `npm run build`
+*   **Verificar tipos de TypeScript:** `npm run type-check`
+
+## Licencia
+
+Este proyecto está bajo la **Licencia MIT**. Consulta el archivo [LICENSE](LICENSE) para más detalles.
